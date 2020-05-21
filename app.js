@@ -42,6 +42,8 @@ var Model = (function() {
             }
 
             data.item[type].push(newItem);
+
+            return newItem;
         },
 
         test: function(){
@@ -53,20 +55,46 @@ var Model = (function() {
 
 var View = (function() {
 
+    return {
+        addItemToUI: function(newItem, type){
+            var updatedItemTemplate, className, itemTemplate;
+
+            if(type === "inc") {
+                className = ".income__list"
+
+                itemTemplate = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix">'+
+                '<div class="item__value">%amount%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>'+
+                '</div></div></div>';
+            } else {
+                className = ".expenses__list"
+
+                itemTemplate = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%amount%</div>'+
+                '<div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>'+
+                '</div></div></div>';
+            }
+            updatedItemTemplate = itemTemplate.replace("%id%", newItem.id);
+            updatedItemTemplate = updatedItemTemplate.replace("%description%", newItem.description);
+            updatedItemTemplate = updatedItemTemplate.replace("%amount%", "Rs "+newItem.amount);
+
+            document.querySelector(className).insertAdjacentHTML("beforeend", updatedItemTemplate);
+        }
+    }
 })();
 
 var Controller = (function(model, view) {
-    var type, description, amount;
 
     document.querySelector(".add__btn").addEventListener("click", function() {
+        var newItem, type , description, amount;
         //Get the data from the input fields
         type = document.querySelector(".add__type").value;
         description = document.querySelector(".add__description").value;
         amount = document.querySelector(".add__value").value;
 
         //Add that particular data to the data-structure
-        model.addItem(type, description, amount);
+        newItem = model.addItem(type, description, amount);
+
         //Update the UI with the added income/expense
+        view.addItemToUI(newItem, type);
 
         //update the budget on data structure and the UI
         updateBudget();
