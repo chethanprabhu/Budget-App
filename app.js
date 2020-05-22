@@ -34,16 +34,17 @@ var Model = (function() {
             } else {
                 id = 0;
             }
-
-            if(type === "inc") {
-                newItem = new Income(id, description, amount);
-            } else {
-                newItem = new Expense(id, description, amount);
-            }
-
-            data.item[type].push(newItem);
-
-            return newItem;
+            if(description !== "" || amount !== "") {
+                if(type === "inc") {
+                    newItem = new Income(id, description, amount);
+                } else {
+                    newItem = new Expense(id, description, amount);
+                }
+    
+                data.item[type].push(newItem);
+    
+                return newItem;
+            }   
         },
 
         test: function(){
@@ -92,6 +93,10 @@ var Controller = (function(model, view) {
 
         //Add that particular data to the data-structure
         newItem = model.addItem(type, description, amount);
+
+        //reset the input fields
+        document.querySelector(".add__description").value = "";
+        document.querySelector(".add__value").value = "";
 
         //Update the UI with the added income/expense
         view.addItemToUI(newItem, type);
