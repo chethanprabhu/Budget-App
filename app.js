@@ -59,6 +59,15 @@ var Model = (function() {
                 updatedPercentage: data.finalPercentage
             }
         },
+        deleteItemDB: function(deletedItem) {
+        
+            data.item[deletedItem.type].forEach(function(cur, index) {
+                if(cur.id == deletedItem.id) {
+                    data.item[deletedItem.type].splice(index, 1);
+                }
+            })
+            
+        },
 
         test: function(){
             console.log(data);
@@ -101,6 +110,17 @@ var View = (function() {
             } else {
                 document.querySelector(".budget__expenses--percentage").textContent = updatedValues.updatedPercentage + "%";
             }
+        },
+        deleteItemUI: function(item) {
+            deletedType = item.path[4].id.split("-")[0];
+            deletedId = item.path[4].id.split("-")[1];
+            //e.target.parentNode.parentNode.parentNode.parentNode.parentNode.removeChild(e.target.parentNode.parentNode.parentNode.parentNode);
+            item.path[5].removeChild(item.path[4]); //above line does the same thing but in kinda not so "DRY" way ;)
+
+            return {
+                id: deletedId,
+                type: deletedType
+            }
         }
     }
 })();
@@ -134,6 +154,15 @@ var Controller = (function(model, view) {
         document.querySelector(".add__description").classList.toggle('red-focus');
         document.querySelector(".add__value").classList.toggle('red-focus');
         document.querySelector(".add__btn").classList.toggle('red');
+    })
+
+    document.querySelector(".container").addEventListener("click", function(item){
+        //delete Item from UI
+        var deletedItem = view.deleteItemUI(item);
+
+        //delete item from data base
+        model.deleteItemDB(deletedItem);
+
     })
 
     updateBudget = function(item, type) {
