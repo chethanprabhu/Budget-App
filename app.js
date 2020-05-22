@@ -22,7 +22,8 @@ var Model = (function() {
             inc: 0,
             exp: 0
         },
-        finalBudget: 0
+        finalBudget: 0,
+        finalPercentage: 0
     }
 
     return {
@@ -49,11 +50,13 @@ var Model = (function() {
         updateBudget: function(item, type) {
             data.totals[type] = parseFloat(data.totals[type]) + parseFloat(item.amount);
             data.finalBudget = parseFloat(data.totals.inc) - parseFloat(data.totals.exp);
+            data.finalPercentage = ((parseFloat(data.totals.exp) / parseFloat(data.totals.inc)) * 100).toFixed(0);
 
             return {
                 updatedIncome: data.totals.inc,
                 updatedExpense: data.totals.exp,
-                updatedBudget: data.finalBudget
+                updatedBudget: data.finalBudget,
+                updatedPercentage: data.finalPercentage
             }
         },
 
@@ -93,6 +96,11 @@ var View = (function() {
             document.querySelector(".budget__value").textContent = "₹ "+updatedValues.updatedBudget;
             document.querySelector(".budget__income--value").textContent = "₹ "+updatedValues.updatedIncome;
             document.querySelector(".budget__expenses--value").textContent = "₹ "+updatedValues.updatedExpense;
+            if(updatedValues.updatedIncome <= 0) {
+                document.querySelector(".budget__expenses--percentage").textContent = "---";
+            } else {
+                document.querySelector(".budget__expenses--percentage").textContent = updatedValues.updatedPercentage + "%";
+            }
         }
     }
 })();
