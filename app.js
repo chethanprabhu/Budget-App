@@ -120,6 +120,14 @@ var Controller = (function(model, view) {
         updateBudget(newItem, type);
     })
 
+    document.querySelector(".add__type").addEventListener("change", function() {
+        console.log("hello");
+        document.querySelector(".add__type").classList.toggle('red-focus');
+        document.querySelector(".add__description").classList.toggle('red-focus');
+        document.querySelector(".add__value").classList.toggle('red-focus');
+        document.querySelector(".add__btn").classList.toggle('red');
+    })
+
     updateBudget = function(item, type) {
         //Update the total budget
         var updatedValues = model.updateBudget(item, type);
