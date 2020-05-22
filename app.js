@@ -130,6 +130,10 @@ var Controller = (function(model, view) {
     return {
         init: function(){
             console.log("application has started");
+            document.querySelector(".budget__value").textContent = "₹ 0";
+            document.querySelector(".budget__income--value").textContent = "₹ 0";
+            document.querySelector(".budget__expenses--value").textContent = "₹ 0";
+            document.querySelector(".budget__expenses--percentage").textContent = "---";
         }
     }
 
