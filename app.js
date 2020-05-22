@@ -134,6 +134,8 @@ var Controller = (function(model, view) {
             document.querySelector(".budget__income--value").textContent = "₹ 0";
             document.querySelector(".budget__expenses--value").textContent = "₹ 0";
             document.querySelector(".budget__expenses--percentage").textContent = "---";
+            document.querySelector(".budget__title--month").textContent = ['January','February','March','April','May','June','July','August','September','October','November','December'][new Date().getMonth()] + " " +
+                new Date().getFullYear();
         }
     }
 
