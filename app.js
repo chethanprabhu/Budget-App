@@ -46,6 +46,16 @@ var Model = (function() {
                 return newItem;
             }   
         },
+        updateBudget: function(item, type) {
+            data.totals[type] = parseFloat(data.totals[type]) + parseFloat(item.amount);
+            data.finalBudget = parseFloat(data.totals.inc) - parseFloat(data.totals.exp);
+
+            return {
+                updatedIncome: data.totals.inc,
+                updatedExpense: data.totals.exp,
+                updatedBudget: data.finalBudget
+            }
+        },
 
         test: function(){
             console.log(data);
@@ -75,9 +85,14 @@ var View = (function() {
             }
             updatedItemTemplate = itemTemplate.replace("%id%", newItem.id);
             updatedItemTemplate = updatedItemTemplate.replace("%description%", newItem.description);
-            updatedItemTemplate = updatedItemTemplate.replace("%amount%", "Rs "+newItem.amount);
+            updatedItemTemplate = updatedItemTemplate.replace("%amount%", "₹ "+newItem.amount);
 
             document.querySelector(className).insertAdjacentHTML("beforeend", updatedItemTemplate);
+        },
+        updateBudgetUI: function(updatedValues) {
+            document.querySelector(".budget__value").textContent = "₹ "+updatedValues.updatedBudget;
+            document.querySelector(".budget__income--value").textContent = "₹ "+updatedValues.updatedIncome;
+            document.querySelector(".budget__expenses--value").textContent = "₹ "+updatedValues.updatedExpense;
         }
     }
 })();
@@ -102,14 +117,14 @@ var Controller = (function(model, view) {
         view.addItemToUI(newItem, type);
 
         //update the budget on data structure and the UI
-        updateBudget();
+        updateBudget(newItem, type);
     })
 
-    updateBudget = function() {
+    updateBudget = function(item, type) {
         //Update the total budget
-
+        var updatedValues = model.updateBudget(item, type);
         //Update the total budget on the UI
-
+        view.updateBudgetUI(updatedValues);
     }
     
     return {
