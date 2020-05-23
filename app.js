@@ -35,7 +35,7 @@ var Model = (function() {
             } else {
                 id = 0;
             }
-            if(description !== "" || amount !== "") {
+            if(description !== "" && amount !== "") {
                 if(type === "inc") {
                     newItem = new Income(id, description, amount);
                 } else {
