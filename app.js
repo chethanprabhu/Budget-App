@@ -66,11 +66,37 @@ var Model = (function() {
                     data.item[deletedItem.type].splice(index, 1);
                 }
             })
+
+            var amount = data.item[deletedItem.type].map(function(cur){
+                console.log(cur.id);
+                console.log(deletedItem.id);
+                if(cur.id == deletedItem.id) {
+                    console.log("hehe" + cur.amount)
+                    return cur.amount;
+                }
+            })
+
+            console.log("bvc" + amount);
+            data.totals[deletedItem.type] = parseFloat(data.totals[deletedItem.type]) - parseFloat(amount);
+            console.log("---> "+data.totals[deletedItem.type]);
+            data.finalBudget = parseFloat(data.totals.inc) - parseFloat(data.totals.exp);
+            data.finalPercentage = ((parseFloat(data.totals.exp) / parseFloat(data.totals.inc)) * 100).toFixed(0);
+            console.log((parseFloat(data.totals.exp)));
+            console.log((parseFloat(data.totals.inc)));
+            console.log( data.finalPercentage);
+
+            return {
+                updatedIncome: data.totals.inc,
+                updatedExpense: data.totals.exp,
+                updatedBudget: data.finalBudget,
+                updatedPercentage: data.finalPercentage
+            }
             
         },
 
         test: function(){
             console.log(data);
+            return data;
         }
     }
 
@@ -161,7 +187,10 @@ var Controller = (function(model, view) {
         var deletedItem = view.deleteItemUI(item);
 
         //delete item from data base
-        model.deleteItemDB(deletedItem);
+        var updatedValues = model.deleteItemDB(deletedItem);
+
+        //update the UI with latest values after delete
+        view.updateBudgetUI(updatedValues);
 
     })
 
